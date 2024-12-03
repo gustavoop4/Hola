@@ -1,4 +1,3 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="es">
@@ -6,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <title>Login de usuario</title>
-    <link rel="stylesheet"  href="CSS/Clogin.css"/>
+    <link rel="stylesheet"  href="Clogin.css"/>
 </head>
 <style>
     body {

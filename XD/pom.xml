@@ -18,6 +18,18 @@
     
     <dependencies>
         <dependency>
+            <groupId>io.fintrospect</groupId>
+            <artifactId>fintrospect-gson_2.12</artifactId>
+            <version>16.0.0</version>
+            <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.fintrospect</groupId>
+                    <artifactId>fintrospect-core_2.12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>${jakartaee}</version>

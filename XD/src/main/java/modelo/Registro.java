@@ -61,5 +61,8 @@ public class Registro extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("Registro.jsp");
         dispatcher.forward(request, response);
     }
+    
+    
 }
+
 

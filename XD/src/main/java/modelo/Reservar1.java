@@ -1,51 +1,39 @@
 package modelo;
 
+import com.google.gson.Gson;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet(name = "Reservar1", urlPatterns = {"/Reserva1"})
+@WebServlet("/horariosDisponibles")
 public class Reservar1 extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String fecha = request.getParameter("fecha");
-        String hora = request.getParameter("hora");
-        String personas = request.getParameter("personas");
-
-        if (fecha == null || hora == null || personas == null || fecha.isEmpty() || hora.isEmpty() || personas.isEmpty()) {
-            request.setAttribute("errorMessage", "Por favor, complete todos los campos.");
-            request.getRequestDispatcher("ConsultaMesas.jsp").forward(request, response);
-            return;
-        }
-
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String sql = "SELECT m.idMesa, m.capacidadMesa, m.descripMesa, " +
-                         "CASE WHEN d.idMesa IS NOT NULL THEN 'Ocupada' ELSE 'Disponible' END AS estado " +
-                         "FROM MESAS m " +
-                         "LEFT JOIN DISPONIBILIDADES d " +
-                         "ON m.idMesa = d.idMesa " +
-                         "AND d.fechaReserva = ? " +
-                         "AND ABS(DATEDIFF(MINUTE, d.horaReserva, ?)) <= 90 " +
-                         "AND d.disponib = 0 " +
-                         "WHERE m.lugar = ?";
-
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, fecha);
-                stmt.setString(2, hora);
-                stmt.setString(3, personas);
-
-                ResultSet rs = stmt.executeQuery();
-
-                request.setAttribute("mesas", rs);
-                request.getRequestDispatcher("Mesas.jsp").forward(request, response);
-            }
-        } catch (SQLException e) {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        try {
+            // Simulamos obtener las horas desde la base de datos
+            List<String> horasDisponibles = List.of(
+                "12:30", "13:00", "13:30", "14:00", "14:30", 
+                "15:00", "15:30", "16:00", "16:30", "17:00", 
+                "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+            );
+            String json = new Gson().toJson(horasDisponibles); // Usar Gson para generar JSON
+            out.print(json);
+            out.flush();
+        } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Error al consultar las mesas: " + e.getMessage());
-            request.getRequestDispatcher("Reservar1.jsp").forward(request, response);
         }
+        String horaSeleccionada = request.getParameter("hora");
+        
+        String fechaSeleccionada = request.getParameter("fecha");
+        System.out.println(horaSeleccionada);
+        System.out.println(fechaSeleccionada);
+        request.getRequestDispatcher("Mesas.jsp").forward(request, response);
+        response.getWriter().write("Reserva guardada con éxito!");
     }
 }
